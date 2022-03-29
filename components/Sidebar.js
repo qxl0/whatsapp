@@ -1,5 +1,14 @@
+import styled from 'styled-components'
+
 const Sidebar = () => {
-  return <div>Sidebar</div>
+  return (
+    <Container>
+      <Header></Header>
+    </Container>
+  )
 }
 
 export default Sidebar
+
+const Container = styled.div``
+const Header = styled.div``
