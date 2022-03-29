@@ -15,4 +15,6 @@ export default Sidebar
 
 const Container = styled.div``
 const Header = styled.div``
-const UserAvatar = styled(Avatar)``
+const UserAvatar = styled(Avatar)`
+  margin: 10px;
+`
