@@ -1,6 +1,6 @@
 import React from 'react'
-
-const login = () => {
+import styled from 'styled-components'
+const Login = () => {
   return (
     <Container>
       <Head>
@@ -10,6 +10,6 @@ const login = () => {
   )
 }
 
-export default login
+export default Login
 
 const Container = styled.div``
