@@ -4,8 +4,20 @@ import ChatIcon from '@material-ui/icons/chat'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/search'
 import * as EmailValidator from 'email-validator'
+import { signOut } from 'firebase/auth'
+import { auth } from '../firebase'
 
 const Sidebar = () => {
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        console.log('logged out')
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }
+
   const createChat = () => {
     const input = prompt(
       'Plse enter an email address for the user you wish to chat with'
@@ -19,7 +31,7 @@ const Sidebar = () => {
   return (
     <Container>
       <Header>
-        <UserAvatar />
+        <UserAvatar onClick={logout} />
         <IconsContainer>
           <IconButton>
             <ChatIcon />
