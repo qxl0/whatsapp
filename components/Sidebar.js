@@ -55,7 +55,7 @@ const Sidebar = () => {
   return (
     <Container>
       <Header>
-        <UserAvatar onClick={logout} />
+        <UserAvatar src={user.photoURL} onClick={logout} />
         <IconsContainer>
           <IconButton>
             <ChatIcon />
