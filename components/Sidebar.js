@@ -5,12 +5,18 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/search'
 import * as EmailValidator from 'email-validator'
 import { signOut } from 'firebase/auth'
-import { doc, addDoc, collection } from 'firebase/firestore'
+import { doc, addDoc, collection, query, where } from 'firebase/firestore'
 import { db, auth } from '../firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import { useCollection } from 'react-firebase-hooks/firestore'
 
 const Sidebar = () => {
   const [user] = useAuthState(auth)
+  const userchatref = query(
+    collection(db, 'chats'),
+    where('users', 'array-contains', user.email)
+  )
+  const [chatSnapshot] = useCollection(userchatref)
   const logout = () => {
     signOut(auth)
       .then(() => {
@@ -28,11 +34,22 @@ const Sidebar = () => {
 
     if (!input) return null
 
-    if (EmailValidator.validate(input)) {
+    if (
+      EmailValidator.validate(input) &&
+      !chatAlreadyExists(input) &&
+      input != user.email
+    ) {
       const docRef = addDoc(collection(db, 'chats'), {
         users: [user.email, input],
       })
     }
+  }
+
+  const chatAlreadyExists = (recipentEmail) => {
+    return !!chatSnapshot?.docs.find(
+      (chat) =>
+        chat.data().users.find((user) => user === recipentEmail)?.length > 0
+    )
   }
   return (
     <Container>
