@@ -5,9 +5,12 @@ import MoreVertIcon from '@material-ui/icons/MoreVert'
 import SearchIcon from '@material-ui/icons/search'
 import * as EmailValidator from 'email-validator'
 import { signOut } from 'firebase/auth'
-import { auth } from '../firebase'
+import { doc, addDoc, collection } from 'firebase/firestore'
+import { db, auth } from '../firebase'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 const Sidebar = () => {
+  const [user] = useAuthState(auth)
   const logout = () => {
     signOut(auth)
       .then(() => {
@@ -26,6 +29,9 @@ const Sidebar = () => {
     if (!input) return null
 
     if (EmailValidator.validate(input)) {
+      const docRef = addDoc(collection(db, 'chats'), {
+        users: [user.email, input],
+      })
     }
   }
   return (
