@@ -1,9 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Avatar } from '@material-ui/core'
 
 const Chat = ({ id, users }) => {
   return (
     <Container>
+      <UserAvatar />
       <p>Recipient Email: {(users[0], users[1])}</p>
     </Container>
   )
@@ -11,4 +13,19 @@ const Chat = ({ id, users }) => {
 
 export default Chat
 
-const Container = styled.div``
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 15px;
+  word-break: break-word;
+
+  :hover {
+    background-color: #e9eaeb;
+  }
+`
+
+const UserAvatar = styled(Avatar)`
+  margin: 5px;
+  margin-right: 15px;
+`
