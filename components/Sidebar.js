@@ -9,6 +9,7 @@ import { doc, addDoc, collection, query, where } from 'firebase/firestore'
 import { db, auth } from '../firebase'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
+import { Chat } from './Chat'
 
 const Sidebar = () => {
   const [user] = useAuthState(auth)
@@ -71,6 +72,9 @@ const Sidebar = () => {
       </Search>
 
       <SidebarButton onClick={createChat}>Start a new chat</SidebarButton>
+      {chatSnapshot?.docs.map((chat) => {
+        return <Chat key={chat.id} id={chat.id} user={chat.data().users} />
+      })}
     </Container>
   )
 }
