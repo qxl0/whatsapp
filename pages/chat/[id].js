@@ -2,6 +2,7 @@ import React from 'react'
 import Head from 'next/head'
 import styled from 'styled-components'
 import Sidebar from '../../components/Sidebar'
+import ChatScreen from '../../components/ChatScreen'
 
 const Chat = () => {
   return (
@@ -10,7 +11,9 @@ const Chat = () => {
         <title>Chat</title>
       </Head>
       <Sidebar />
-      <ChatContainer></ChatContainer>
+      <ChatContainer>
+        <ChatScreen />
+      </ChatContainer>
     </Container>
   )
 }
