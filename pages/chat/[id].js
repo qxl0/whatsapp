@@ -5,7 +5,7 @@ import Sidebar from '../../components/Sidebar'
 import ChatScreen from '../../components/ChatScreen'
 import { orderBy, query, collection, getDoc } from 'firebase/firestore'
 
-const Chat = () => {
+const Chat = ({ chat, messages }) => {
   return (
     <Container>
       <Head>
@@ -42,6 +42,14 @@ export async function getServerSideProps(context) {
   const chat = {
     id: chatRes.id,
     ...chatRes.data(),
+  }
+
+  console.log(chat, messages)
+  return {
+    props: {
+      messages: JSON.stringify(messages),
+      chat: chat,
+    },
   }
 }
 const Container = styled.div`
