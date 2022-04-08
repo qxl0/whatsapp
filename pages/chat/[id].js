@@ -50,16 +50,17 @@ export async function getServerSideProps(context) {
     }))
   console.log('messages', messages)
   // PREF the chat
-  // const chatRes = await getDoc(ref)
-  // const chat = {
-  //   id: chatRes.id,
-  //   ...chatRes.data(),
-  // }
+  const ref2 = doc(db, 'chats', context.query.id)
+  const chatRes = await getDoc(ref2)
+  const chat = {
+    id: chatRes.id,
+    ...chatRes.data(),
+  }
 
   return {
     props: {
       messages: JSON.stringify(messages),
-      // chat: chat,
+      chat: chat,
     },
   }
 }
