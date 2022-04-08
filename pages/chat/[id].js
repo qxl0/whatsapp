@@ -3,7 +3,17 @@ import Head from 'next/head'
 import styled from 'styled-components'
 import Sidebar from '../../components/Sidebar'
 import ChatScreen from '../../components/ChatScreen'
-import { orderBy, query, collection, getDoc } from 'firebase/firestore'
+import {
+  orderBy,
+  query,
+  collection,
+  getDoc,
+  getDocs,
+  doc,
+  where,
+} from 'firebase/firestore'
+import { db } from '../../firebase'
+import { Collections } from '@material-ui/icons'
 
 const Chat = ({ chat, messages }) => {
   return (
@@ -22,12 +32,14 @@ const Chat = ({ chat, messages }) => {
 export default Chat
 
 export async function getServerSideProps(context) {
+  console.log('id:', context.query.id)
   const ref = query(
-    collection(db, 'chats', context.query.id),
+    collection(db, 'chats', context.query.id, 'messages'),
     orderBy('timestamp', 'asc')
   )
-  const messagesRes = await getDoc(ref)
-  messagesRes.docs
+
+  const messagesRes = await getDocs(ref)
+  const messages = messagesRes.docs
     .map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -36,19 +48,18 @@ export async function getServerSideProps(context) {
       ...messages,
       timestamp: messages.timestamp.toDate().getTime(),
     }))
-
+  console.log('messages', messages)
   // PREF the chat
-  const chatRes = await getDoc(ref)
-  const chat = {
-    id: chatRes.id,
-    ...chatRes.data(),
-  }
+  // const chatRes = await getDoc(ref)
+  // const chat = {
+  //   id: chatRes.id,
+  //   ...chatRes.data(),
+  // }
 
-  console.log(chat, messages)
   return {
     props: {
       messages: JSON.stringify(messages),
-      chat: chat,
+      // chat: chat,
     },
   }
 }
