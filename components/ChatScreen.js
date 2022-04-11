@@ -1,8 +1,29 @@
 import styled from 'styled-components'
+import { auth } from '../firebase'
+import MoreVertIcon from '@material-ui/icons/MoreVertIcon'
+import AttachFireIcon from '@material-ui/icons/AttachFireIcon'
+
 const ChatScreen = () => {
+  const [user] = useAuthState(auth)
+  const router = useRouter()
   return (
     <Container>
-      <h1>This is a chat</h1>
+      <Header>
+        <Avatar />
+
+        <HeaderInformation>
+          <h3>Rec Email</h3>
+          <p>Last Seen...</p>
+        </HeaderInformation>
+        <HeaderIcons>
+          <IconButton>
+            <AttachFireIcon />
+          </IconButton>
+          <IconButton>
+            <MoreVertIcon />
+          </IconButton>
+        </HeaderIcons>
+      </Header>
     </Container>
   )
 }
