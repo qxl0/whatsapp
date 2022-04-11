@@ -1,7 +1,10 @@
 import styled from 'styled-components'
 import { auth } from '../firebase'
-import MoreVertIcon from '@material-ui/icons/MoreVertIcon'
-import AttachFireIcon from '@material-ui/icons/AttachFireIcon'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+import AttachFileIcon from '@material-ui/icons/AttachFile'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { useRouter } from 'next/router'
+import { Avatar, Button, IconButton } from '@material-ui/core'
 
 const ChatScreen = () => {
   const [user] = useAuthState(auth)
@@ -17,7 +20,7 @@ const ChatScreen = () => {
         </HeaderInformation>
         <HeaderIcons>
           <IconButton>
-            <AttachFireIcon />
+            <AttachFileIcon />
           </IconButton>
           <IconButton>
             <MoreVertIcon />
@@ -31,3 +34,7 @@ const ChatScreen = () => {
 export default ChatScreen
 
 const Container = styled.div``
+const Header = styled.div``
+
+const HeaderInformation = styled.div``
+const HeaderIcons = styled.div``
