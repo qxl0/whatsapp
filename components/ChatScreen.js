@@ -9,6 +9,7 @@ import { useCollection } from 'react-firebase-hooks/firestore'
 import { db } from '../firebase'
 import { collection, query, orderBy } from 'firebase/firestore'
 import Message from './Message'
+import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth)
@@ -54,8 +55,14 @@ const ChatScreen = ({ chat, messages }) => {
       </Header>
 
       <MessageContainer>
+        {showMessages()}
         <EndOfMessage />
       </MessageContainer>
+
+      <InputContainer>
+        <InsertEmoticonIcon />
+        <Input />
+      </InputContainer>
     </Container>
   )
 }
@@ -63,6 +70,25 @@ const ChatScreen = ({ chat, messages }) => {
 export default ChatScreen
 
 const Container = styled.div``
+const InputContainer = styled.form`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  z-index: 100;
+`
+const Input = styled.input`
+  flex: 1;
+  border: none;
+  outline: 0;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: whitesmoke;
+  margin-left: 15px;
+  margin-right: 15px;
+`
 const Header = styled.div`
   position: sticky;
   background-color: white;
