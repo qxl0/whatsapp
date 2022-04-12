@@ -5,10 +5,34 @@ import AttachFileIcon from '@material-ui/icons/AttachFile'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useRouter } from 'next/router'
 import { Avatar, Button, IconButton } from '@material-ui/core'
+import { useCollection } from 'react-firebase-hooks/firestore'
+import { db } from '../firebase'
+import { collection, query, orderBy } from 'firebase/firestore'
+import Message from './Message'
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth)
   const router = useRouter()
+  const ref = query(
+    collection(db, 'chats', router.query.id, 'messages'),
+    orderBy('timestamp', 'asc')
+  )
+  const [messagesSnapshot] = useCollection(ref)
+
+  const showMessages = () => {
+    if (messagesSnapshot) {
+      return messagesSnapshot.docs.map((message) => (
+        <Message
+          key={message.id}
+          user={message.data().user}
+          message={{
+            ...message.data(),
+            timestamp: message.data().timestamp?.toDate().getTime(),
+          }}
+        />
+      ))
+    }
+  }
 
   return (
     <Container>
