@@ -10,6 +10,7 @@ import { db } from '../firebase'
 import { collection, query, orderBy } from 'firebase/firestore'
 import Message from './Message'
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
+import MicIcon from '@material-ui/icons/Mic'
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth)
@@ -62,6 +63,7 @@ const ChatScreen = ({ chat, messages }) => {
       <InputContainer>
         <InsertEmoticonIcon />
         <Input />
+        <MicIcon />
       </InputContainer>
     </Container>
   )
