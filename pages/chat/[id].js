@@ -13,13 +13,16 @@ import {
   where,
 } from 'firebase/firestore'
 import { db } from '../../firebase'
-import { Collections } from '@material-ui/icons'
+import { auth } from '../../firebase'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import getRecipientEmail from '../../utils/getRecipientEmail'
 
 const Chat = ({ chat, messages }) => {
+  const [user] = useAuthState(auth)
   return (
     <Container>
       <Head>
-        <title>Chat</title>
+        <title>Chat with {getRecipientEmail(chat.users, user)}</title>
       </Head>
       <Sidebar />
       <ChatContainer>
@@ -48,7 +51,7 @@ export async function getServerSideProps(context) {
       ...messages,
       timestamp: messages.timestamp.toDate().getTime(),
     }))
-  console.log('messages', messages)
+
   // PREF the chat
   const ref2 = doc(db, 'chats', context.query.id)
   const chatRes = await getDoc(ref2)
@@ -57,6 +60,7 @@ export async function getServerSideProps(context) {
     ...chatRes.data(),
   }
 
+  console.log(chat, messages)
   return {
     props: {
       messages: JSON.stringify(messages),
