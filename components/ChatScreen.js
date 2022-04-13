@@ -12,6 +12,8 @@ import Message from './Message'
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
 import MicIcon from '@material-ui/icons/Mic'
 import { useState } from 'react'
+import { doc, addDoc, setDoc, serverTimestamp } from 'firebase/firestore'
+import getRecipientEmail from '../utils/getRecipientEmail'
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth)
@@ -35,6 +37,10 @@ const ChatScreen = ({ chat, messages }) => {
           }}
         />
       ))
+    } else {
+      return JSON.parse(messages).map((message) => (
+        <Message key={message.id} user={message.user} message={message} />
+      ))
     }
   }
 
@@ -43,15 +49,15 @@ const ChatScreen = ({ chat, messages }) => {
 
     // update last seen
     setDoc(
-      collection(db, 'users', user.uid),
+      doc(db, 'users', user.uid),
       {
-        lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+        lastSeen: serverTimestamp(),
       },
       { merge: true }
     )
 
-    setDoc(collection(db, 'chats', router.query.id, 'messages'), {
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    addDoc(collection(db, 'chats', router.query.id, 'messages'), {
+      timestamp: serverTimestamp(),
       message: input,
       user: user.email,
       photoURL: user.photoURL,
@@ -59,13 +65,16 @@ const ChatScreen = ({ chat, messages }) => {
 
     setInput('')
   }
+
+  const recipientEmail = getRecipientEmail(chat.users, user)
+
   return (
     <Container>
       <Header>
         <Avatar />
 
         <HeaderInformation>
-          <h3>Rec Email</h3>
+          <h3>{recipientEmail}</h3>
           <p>Last Seen...</p>
         </HeaderInformation>
         <HeaderIcons>
