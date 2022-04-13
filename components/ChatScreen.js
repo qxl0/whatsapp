@@ -11,9 +11,11 @@ import { collection, query, orderBy } from 'firebase/firestore'
 import Message from './Message'
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon'
 import MicIcon from '@material-ui/icons/Mic'
+import { useState } from 'react'
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth)
+  const [input, setInput] = useState('')
   const router = useRouter()
   const ref = query(
     collection(db, 'chats', router.query.id, 'messages'),
@@ -36,6 +38,27 @@ const ChatScreen = ({ chat, messages }) => {
     }
   }
 
+  const sendMessage = (e) => {
+    e.preventDefault()
+
+    // update last seen
+    setDoc(
+      collection(db, 'users', user.uid),
+      {
+        lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+      },
+      { merge: true }
+    )
+
+    setDoc(collection(db, 'chats', router.query.id, 'messages'), {
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      message: input,
+      user: user.email,
+      photoURL: user.photoURL,
+    })
+
+    setInput('')
+  }
   return (
     <Container>
       <Header>
@@ -62,7 +85,10 @@ const ChatScreen = ({ chat, messages }) => {
 
       <InputContainer>
         <InsertEmoticonIcon />
-        <Input />
+        <Input value={input} onChange={(e) => setInput(e.target.value)} />
+        <button hidden disabled={!input} type="submit" onClick={sendMessage}>
+          Send Message
+        </button>
         <MicIcon />
       </InputContainer>
     </Container>
