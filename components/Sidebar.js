@@ -15,7 +15,7 @@ const Sidebar = () => {
   const [user] = useAuthState(auth)
   const userchatref = query(
     collection(db, 'chats'),
-    where('users', 'array-contains', user.email)
+    where('users', 'array-contains', user?.email)
   )
   const [chatSnapshot] = useCollection(userchatref)
   const logout = () => {
