@@ -15,10 +15,12 @@ import { useState } from 'react'
 import { doc, addDoc, setDoc, serverTimestamp, where } from 'firebase/firestore'
 import getRecipientEmail from '../utils/getRecipientEmail'
 import TimeAgo from 'timeago-react'
+import { useRef } from 'react'
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth)
   const [input, setInput] = useState('')
+  const endOfMessagesRef = useRef(null)
   const router = useRouter()
   const ref = query(
     collection(db, 'chats', router.query.id, 'messages'),
@@ -51,6 +53,12 @@ const ChatScreen = ({ chat, messages }) => {
     }
   }
 
+  const scrollToBottom = () => {
+    endOfMessagesRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
+  }
   const sendMessage = (e) => {
     e.preventDefault()
 
@@ -71,12 +79,12 @@ const ChatScreen = ({ chat, messages }) => {
     })
 
     setInput('')
+    scrollToBottom()
   }
 
   const recipient = recipientSnapshot?.docs?.[0]?.data()
   const recipientEmail = getRecipientEmail(chat.users, user)
 
-  console.log('recipient:', recipient)
   return (
     <Container>
       <Header>
@@ -92,7 +100,7 @@ const ChatScreen = ({ chat, messages }) => {
             <p>
               Last active:{' '}
               {recipient?.lastSeen?.toDate() ? (
-                <TimeAgo datetime={recipient?.astSeen?.toDate()} />
+                <TimeAgo datetime={recipient?.lastSeen?.toDate()} />
               ) : (
                 'Unavailable'
               )}
@@ -113,7 +121,7 @@ const ChatScreen = ({ chat, messages }) => {
 
       <MessageContainer>
         {showMessages()}
-        <EndOfMessage />
+        <EndOfMessage ref={endOfMessagesRef} />
       </MessageContainer>
 
       <InputContainer>
